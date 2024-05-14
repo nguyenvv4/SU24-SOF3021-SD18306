@@ -1,9 +1,6 @@
 package com.example.sd18306.controller;
 
 import com.example.sd18306.model.SinhVien;
-import com.example.sd18306.service.SinhVienService;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,34 +13,64 @@ import java.util.ArrayList;
 @Controller
 public class SinhVienController {
 
-    @Autowired
-    SinhVienService sinhVienService;
+    ArrayList<SinhVien> list = new ArrayList<>();
+
+    public SinhVienController() {
+        list.add(new SinhVien(1, "Nguyen Van A", "Ha Noi", "Nam", "Hoat dong"));
+        list.add(new SinhVien(2, "Nguyen Van A", "Ha Noi", "Nam", "Hoat dong"));
+        list.add(new SinhVien(3, "Nguyen Van A", "Ha Noi", "Nam", "Hoat dong"));
+    }
 
     @GetMapping("/sinh-vien")
     public String sinhVien(Model model) {
-        ArrayList<SinhVien> list = sinhVienService.getList();
         model.addAttribute("listSinhVien", list);
         model.addAttribute("message", "Xin chao");
         return "sinh-vien";
     }
 
     @PostMapping("/sinh-vien")
-    public String add(Model model, HttpServletRequest request,
-                      @ModelAttribute("sinhVien") SinhVien sinhVien) {
-//        Integer id = Integer.parseInt(request.getParameter("id"));
-//        String hoTen = request.getParameter("hoTen");
-//        String diaChi = request.getParameter("diaChi");
-//        String gioiTinh = request.getParameter("gioiTinh");
-//        String trangThai = request.getParameter("trangThai");
-//        SinhVien sinhVien = new SinhVien(id, hoTen, diaChi, gioiTinh, trangThai);
-        sinhVienService.add(sinhVien);
+    public String add(
+            @ModelAttribute("sinhVien") SinhVien sinhVien) {
+        list.add(sinhVien);
         return "redirect:/sinh-vien";
     }
 
     @GetMapping("/sinh-vien/delete")
     public String delete(@RequestParam("id") Integer id) {
         System.out.println("id la: " + id);
-        sinhVienService.delete(id);
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId().equals(id)) {
+                SinhVien sinhVien = list.get(i);
+                list.remove(sinhVien);
+            }
+        }
         return "redirect:/sinh-vien";
+    }
+
+    @GetMapping("/sinh-vien/edit")
+    public String detail(@RequestParam("id") Integer id,
+                         Model model) {
+        SinhVien sinhVien = new SinhVien();
+        for (SinhVien sv : list) {
+            if (sv.getId().equals(id)) {
+                sinhVien = sv;
+            }
+        }
+        model.addAttribute("sinhVien", sinhVien);
+        return "edit";
+    }
+
+    @PostMapping("/sinh-vien/update")
+    public String update(@ModelAttribute("sinhVien") SinhVien sinhVien) {
+        for (SinhVien sv : list) {
+            if (sv.getId().equals(sinhVien.getId())) {
+                sv.setDiaChi(sinhVien.getDiaChi());
+                sv.setHoTen(sinhVien.getHoTen());
+                sv.setGioiTinh(sinhVien.getGioiTinh());
+                sv.setTrangThai(sinhVien.getTrangThai());
+            }
+        }
+        return "redirect:/sinh-vien";
+
     }
 }

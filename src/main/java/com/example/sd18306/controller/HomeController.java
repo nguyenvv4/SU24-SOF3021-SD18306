@@ -1,24 +1,14 @@
 package com.example.sd18306.controller;
 
-import com.example.sd18306.model.SinhVien;
-import com.example.sd18306.service.SinhVienService;
-import com.example.sd18306.service.impl.SinhVienServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.util.ArrayList;
 
 @Controller
 public class HomeController {
 
-    @Autowired
-    SinhVienService sinhVienService;
 
     @GetMapping("/")
 //    @RequestMapping(value = "/", method = RequestMethod.GET)
